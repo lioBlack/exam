@@ -1,0 +1,260 @@
+Imports System.Data
+Imports System.Data.SqlClient
+Partial Class _Default
+    Inherits System.Web.UI.Page
+    Dim con As New SqlConnection
+    Dim cmd As New SqlCommand
+    Dim constr As String = ""
+    Dim cmdstr As String
+    Dim gender As String
+
+    Dim adp As SqlDataAdapter
+    Dim ds As DataSet
+
+    Protected Sub btnInsert_Click(sender As Object, e As EventArgs) Handles btnInsert.Click
+        Try
+            If rdbMale.Checked = True Then
+                gender = rdbMale.Text
+            Else
+                gender = rdbFemale.Text
+            End If
+
+            con = New SqlConnection(constr)
+            con.Open()
+            cmdstr = "insert into kd values(" & txtNo.Text & ",' " & txtName.Text & " ',' " & DropDownCity.Text & " ',' " & DropDownDept.Text & " '," & txtSalary.Text & ",' " & Calendar1.SelectedDate & " ',' " & gender & " ',' " & txtPassword.Text & " ',' " & txtRepassword.Text & " ')"
+            cmd = New SqlCommand(cmdstr, con)
+            cmd.ExecuteNonQuery()
+            con.Close()
+
+            MsgBox("Inserted Sucessfully...!")
+            clearall()
+            fillgrid()
+
+        Catch ex As Exception
+            MsgBox(ex.Message.ToString())
+        End Try
+    End Sub
+
+    Protected Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+        Try
+            con = New SqlConnection(constr)
+            con.Open()
+            cmdstr = "delete from kd where No=" & txtNo.Text & ""
+            cmd = New SqlCommand(cmdstr, con)
+            cmd.ExecuteNonQuery()
+            con.Close()
+
+            MsgBox("Deleted Sucessfully...!")
+
+        Catch ex As Exception
+            MsgBox(ex.Message.ToString())
+        End Try
+    End Sub
+
+    Protected Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
+        Try
+            If rdbMale.Checked = True Then
+                gender = rdbMale.Text
+       	Else
+                gender = rdbFemale.Text
+            End If
+
+            con = New SqlConnection(constr)
+            con.Open()
+            cmdstr = "update kd set name=' " & txtName.Text & " ',city=' " & DropDownCity.Text & " ',department=' " & DropDownDept.Text & " ',salary=" & txtSalary.Text & ",date=' " & Calendar1.SelectedDate & " ',password=' " & txtPassword.Text & " ',re_password=' " & txtRepassword.Text & " ' where no=" & txtNo.Text & " "
+            cmd = New SqlCommand(cmdstr, con)
+            cmd.ExecuteNonQuery()
+            con.Close()
+
+            MsgBox("Updated Sucessfully...!")
+            clearall()
+            fillgrid()
+
+        Catch ex As Exception
+            MsgBox(ex.Message.ToString())
+        End Try
+    End Sub
+    Sub clearall()
+        txtNo.Text = ""
+        txtName.Text = ""
+        txtSalary.Text = ""
+        txtPassword.Text = ""
+        txtRepassword.Text = ""
+    End Sub
+    Sub fillgrid()
+        Try
+            If rdbMale.Checked = True Then
+                gender = rdbMale.Text
+            Else
+                gender = rdbFemale.Text
+            End If
+
+            con = New SqlConnection(constr)
+            con.Open()
+            cmdstr = "select * from kd"
+            cmd = New SqlCommand(cmdstr, con)
+
+            adp = New SqlDataAdapter(cmd)
+            ds = New DataSet
+            adp.Fill(ds, "kd")
+            GridView1.DataSource = ds.Tables("kd")
+            GridView1.DataBind()
+            con.Close()
+            
+        Catch ex As Exception
+            MsgBox(ex.Message.ToString())
+        End Try
+    End Sub
+
+    Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
+        fillgrid()
+    End Sub
+End Class
+
+
+
+
+validations control code:-
+  ValidationSettings.UnobtrusiveValidationMode = UnobtrusiveValidationMode.None
+
+
+
+
+login page:-
+[id and pass code]
+
+Public Class WebForm1
+    Inherits System.Web.UI.Page
+
+    Dim cook As New HttpCookie("Login")
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Dim pass As String
+        Try
+            pass = Response.Cookies("Login").Values("sugc").ToString
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Protected Sub btnlogin_Click(sender As Object, e As EventArgs) Handles btnlogin.Click
+        If (txtpass.Text.Equals("sugc123")) Then
+            Session("sugc") = txtuserid.Text
+            cook.Values("sugc") = txtuserid.Text
+            cook.Expires.AddMinutes(5)
+            Response.Cookies.Add(cook)
+            Response.Redirect("Home.aspx")
+        End If
+
+    End Sub
+
+End Class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Imports System.Data
+Imports System.Data.SqlClient
+Public Class WebForm2
+    Inherits System.Web.UI.Page
+
+    Dim con As New SqlConnection
+    Dim cmd As New SqlCommand
+    Dim constr As String = "Data Source=(LocalDB)\v11.0;AttachDbFilename=c:\users\kanoc\documents\visual studio 2012\Projects\WebApplication1\WebApplication1\App_Data\Database1.mdf;Integrated Security=True"
+    Dim cmdstr As String
+    Dim gender As String
+    Dim adp As New SqlDataAdapter
+    Dim ds As New DataSet
+
+    Protected Sub btnInsert_Click(sender As Object, e As EventArgs) Handles btnInsert.Click
+        If rdbFemale.Checked = True Then
+            gender = rdbFemale.Text
+        Else
+            gender = rddbmale.Text
+        End If
+        con = New SqlConnection(constr)
+        con.Open()
+        cmdstr = "Insert into emp values ('" + txtId.Text + "','" + txtName.Text + "','" + DropDownList1.SelectedValue + "','" + gender + "','" + txtAge.Text + "')"
+        cmd = New SqlCommand(cmdstr, con)
+        cmd.ExecuteNonQuery()
+        MsgBox("Insert Successfully.....!")
+        con.Close()
+        fillgrid()
+
+    End Sub
+
+    Protected Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
+        If rdbFemale.Checked = True Then
+            gender = rdbFemale.Text
+        Else
+            gender = rdbmale.Text
+        End If
+        con = New SqlConnection(constr)
+        con.Open()
+        cmdstr = "Update emp set name='" + txtName.Text + "',city='" + DropDownList1.SelectedValue + "',gender='" + gender + "',age='" + txtAge.Text + "' where id='" + txtId.Text + "'"
+        cmd = New SqlCommand(cmdstr, con)
+        cmd.ExecuteNonQuery()
+        MsgBox("Update Successfully.....!")
+        con.Close()
+        fillgrid()
+
+    End Sub
+
+    Protected Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+        con = New SqlConnection(constr)
+        con.Open()
+        cmdstr = "Delete from emp where id='" + txtId.Text + "'"
+        cmd = New SqlCommand(cmdstr, con)
+        cmd.ExecuteNonQuery()
+        MsgBox("Delete Successfully.....!")
+        con.Close()
+        fillgrid()
+
+    End Sub
+
+    Sub fillgrid()
+        con = New SqlConnection(constr)
+        con.Open()
+        cmdstr = "Select * from emp"
+        cmd = New SqlCommand(cmdstr, con)
+        adp = New SqlDataAdapter(cmd)
+        ds = New DataSet
+        adp.Fill(ds, "emp")
+        GridView1.DataSource = ds.Tables("emp")
+        GridView1.DataBind()
+        con.Close()
+    End Sub
+
+End Class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

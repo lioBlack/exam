@@ -1,0 +1,90 @@
+[database connection,insert,update,delete code]
+<?php
+$con=mysqli_connect("localhost","root","");
+$id=$_POST["txtid"];
+$name=$_POST["txtname"];
+$city=$_POST["select"];
+$gender=$_POST["radiobutton"];
+$action=$_POST["Submit"];
+if($con==true)
+{
+	echo "Connection Successfully...!<br/>";
+	$db=mysqli_select_db($con,"emp");
+	if($db==true)
+	{
+		echo "Database select Successfully...!<br/>";
+		if($action=="Insert")
+		{
+			$sql="INSERT INTO `emp` VALUES ('$id','$name','$city','$gender')";
+		}
+		if($action=="Update")
+		{
+			$sql="UPDATE `emp` SET `name`='$name',`city`='$city',`gender`='$gender' WHERE `id`='$id'";
+		}
+		if($action=="Delete")
+		{
+			$sql="DELETE FROM `emp` WHERE `id`='$id'";
+		}
+		$result=mysqli_query($con,"$sql");
+		if($result==true)
+		{
+			echo "$action is Successfully....!";
+		}
+		else 
+		{
+			echo "$action Is faild..!";
+		}
+	}
+	else
+	{
+		echo "Try Again..!";
+	}
+}
+else
+{
+	echo "Try Again..!";
+}
+?>
+
+
+
+
+
+[show data code]
+
+<table width="200" border="1">
+  <tr>
+    <td>Id</td>
+    <td>Name</td>
+    <td>City</td>
+    <td>Gender</td>
+  </tr>
+  <?php
+  $con=mysqli_connect("localhost","root","");
+  $db=mysqli_select_db($con,"emp");
+  $sql="select * from `emp`";
+  $result=mysqli_query($con,"$sql");
+  while($row=mysqli_fetch_row("$result"))
+  {
+  	echo "<tr>";
+    echo "<td>row[0]</td>";
+    echo "<td>row[1]</td>";
+    echo "<td>row[2]</td>";
+    echo "<td>row[3]</td>";
+    echo "</tr>";
+  }
+ ?>
+</table>
+
+
+
+
+
+
+flask:-
+
+command for vs code
+first command:- python -m venv myenv
+second command:- .\myenv\Scripts\activate
+third command:- pip install flask
+compiler command:- python filename.py
